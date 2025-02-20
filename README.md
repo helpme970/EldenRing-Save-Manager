@@ -5,9 +5,6 @@ GUI app written entirely in Python
 
 
 ## Usage
-#### Windows
-[Download Latest Release](https://github.com/Ariescyn/EldenRing-Save-Manager/releases/latest)
-
 #### Linux / Proton / SteamDeck
 
 Dependencies
