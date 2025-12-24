@@ -6,8 +6,8 @@ from tkinter import filedialog as fd
 from tkinter import ttk
 import tkinter as TKIN
 from collections import Counter
-from PIL import Image, ImageTk
-import subprocess, os, zipfile, requests, re, time, hexedit, webbrowser, itemdata, lzma, datetime, json
+#from PIL import Image #, ImageTk
+import subprocess, os, zipfile, re, time, hexedit, webbrowser, itemdata, lzma, datetime, json #requests
 from os_layer import *
 from pathlib import Path as PATH
 #Collapse all functions to navigate. In Atom editor: "Edit > Folding > Fold All"
@@ -21,13 +21,13 @@ if not is_windows:
 class Config:
 
     def __init__(self):
-        if not os.path.exists(post_update_file):
-            with open(post_update_file, 'w') as ff:
-                ff.write("True")
+        # if not os.path.exists(post_update_file):
+        #     with open(post_update_file, 'w') as ff:
+        #         ff.write("True")
 
-        with open(post_update_file, 'r') as f:
-            x = f.read()
-            self.post_update = (True if x == 'True' else False)
+        # with open(post_update_file, 'r') as f:
+        #     x = f.read()
+        #     self.post_update = (True if x == 'True' else False)
 
 
 
@@ -45,7 +45,7 @@ class Config:
 
         if not os.path.exists(config_path):  # Build dictionary for first time
             dat = {}
-            dat["post_update"] = True
+            #dat["post_update"] = True
             dat["gamedir"] = ""
             dat["steamid"] = ""
             dat["seamless-coop"] = False
@@ -58,10 +58,10 @@ class Config:
             with open(config_path, 'r') as f:
                 js = json.load(f)
                 self.cfg = js
-    def set_update(self, val):
-        self.post_update = val
-        with open(post_update_file, 'w') as f:
-            f.write("True" if val else "False")
+    # def set_update(self, val):
+    #     self.post_update = val
+    #     with open(post_update_file, 'w') as f:
+    #         f.write("True" if val else "False")
 
     def set(self,k,v):
         self.cfg[k] = v
@@ -220,39 +220,39 @@ def get_charnames(file):
         return out
 
 
-def finish_update():
-    if os.path.exists("./data/GameSaveDir.txt"):  # Legacy file for pre v1.5 versions
-        os.remove("./data/GameSaveDir.txt")
+# def finish_update():
+#     if os.path.exists("./data/GameSaveDir.txt"):  # Legacy file for pre v1.5 versions
+#         os.remove("./data/GameSaveDir.txt")
 
 
-    if config.post_update:  # Will be ran on first launch after running update.exe
+#     if config.post_update:  # Will be ran on first launch after running update.exe
 
-        if not os.path.exists("./data/save-files-pre-V1.5-BACKUP"): # NONE OF THIS WILL BE RUN ON v1.5+
-            try:
-                copy_folder(savedir, "./data/save-files-pre-V1.5-BACKUP")
-            except Exception as e:
-                traceback.print_exc()
-                str_err = "".join(traceback.format_exc())
-                popup(str_err)
+#         if not os.path.exists("./data/save-files-pre-V1.5-BACKUP"): # NONE OF THIS WILL BE RUN ON v1.5+
+#             try:
+#                 copy_folder(savedir, "./data/save-files-pre-V1.5-BACKUP")
+#             except Exception as e:
+#                 traceback.print_exc()
+#                 str_err = "".join(traceback.format_exc())
+#                 popup(str_err)
 
-            for dir in os.listdir(savedir):  # Reconstruct save-file structure for pre v1.5 versions
+#             for dir in os.listdir(savedir):  # Reconstruct save-file structure for pre v1.5 versions
 
-                try:
-                    id = re.findall(r"\d{17}", str(os.listdir(f"{savedir}{dir}/")))
-                    if len(id) < 1:
-                        continue
+#                 try:
+#                     id = re.findall(r"\d{17}", str(os.listdir(f"{savedir}{dir}/")))
+#                     if len(id) < 1:
+#                         continue
 
-                    shutil.move(f"{savedir}{dir}/{id[0]}/{ext()}", f"{savedir}{dir}/{ext()}")
-                    for i in ["GraphicsConfig.xml", "notes.txt", "steam_autocloud.vdf"]:
-                        if os.path.exists(f"{savedir}{dir}/{i}"):
-                            os.remove(f"{savedir}{dir}/{i}")
+#                     shutil.move(f"{savedir}{dir}/{id[0]}/{ext()}", f"{savedir}{dir}/{ext()}")
+#                     for i in ["GraphicsConfig.xml", "notes.txt", "steam_autocloud.vdf"]:
+#                         if os.path.exists(f"{savedir}{dir}/{i}"):
+#                             os.remove(f"{savedir}{dir}/{i}")
 
-                    delete_folder(f"{savedir}{dir}/{id[0]}")
-                except Exception as e:
-                    traceback.print_exc()
-                    str_err = "".join(traceback.format_exc())
-                    popup(str_err)
-                    continue
+#                     delete_folder(f"{savedir}{dir}/{id[0]}")
+#                 except Exception as e:
+#                     traceback.print_exc()
+#                     str_err = "".join(traceback.format_exc())
+#                     popup(str_err)
+#                     continue
 
 
 def ext():
@@ -287,41 +287,41 @@ def forcequit():
     popup(text="Are you sure?", buttons=True, command=comm)
 
 
-def update_app(on_start=False):
-    """Gets redirect URL of latest release, then pulls the version number from URL and makes a comparison"""
+# def update_app(on_start=False):
+#     """Gets redirect URL of latest release, then pulls the version number from URL and makes a comparison"""
 
-    try:
-        version_url = (
-            "https://github.com/Ariescyn/EldenRing-Save-Manager/releases/latest"
-        )
-        r = requests.get(version_url)  # Get redirect url
-        ver = float(r.url.split("/")[-1].split("v")[1])
-    except:
-        popup("Can not check for updates. Check your internet connection.")
-        return
-    if ver > v_num:
-        popup(
-            text=f" Release v{str(ver)} Available\nClose the program and run the Updater.",
-            buttons=True,
-            functions=(root.quit, donothing),
-            button_names=("Exit Now", "Cancel"),
-        )
+#     try:
+#         version_url = (
+#             "https://github.com/Ariescyn/EldenRing-Save-Manager/releases/latest"
+#         )
+#         r = requests.get(version_url)  # Get redirect url
+#         ver = float(r.url.split("/")[-1].split("v")[1])
+#     except:
+#         popup("Can not check for updates. Check your internet connection.")
+#         return
+#     if ver > v_num:
+#         popup(
+#             text=f" Release v{str(ver)} Available\nClose the program and run the Updater.",
+#             buttons=True,
+#             functions=(root.quit, donothing),
+#             button_names=("Exit Now", "Cancel"),
+#         )
 
-    if on_start is True:
-        return
-    else:
-        popup("Current version up to date")
-        return
+#     if on_start is True:
+#         return
+#     else:
+#         popup("Current version up to date")
+#         return
 
 
-def reset_default_dir():
-    """DEPRECIATED! writes the original gamedir to text file"""
-    global gamedir
-    with open(gamesavedir_txt, "w") as fh:
-        fh.write(eldenring_savedata_dir)
-    with open(gamesavedir_txt, "r") as fh:
-        gamedir = fh.readline()
-    popup("Successfully reset default directory")
+# def reset_default_dir():
+#     """DEPRECIATED! writes the original gamedir to text file"""
+#     global gamedir
+#     with open(gamesavedir_txt, "w") as fh:
+#         fh.write(eldenring_savedata_dir)
+#     with open(gamesavedir_txt, "r") as fh:
+#         gamedir = fh.readline()
+#     popup("Successfully reset default directory")
 
 
 def help_me():
@@ -356,7 +356,7 @@ def create_save():
 
     isforbidden = False
     for char in name:
-        if char in "~'{};:./\,:*?<>|-!@#$%^&()+":
+        if char in "~'{};:./\\,:*?<>|-!@#$%^&()+":
             isforbidden = True
     if isforbidden is True:
         popup("Forbidden character used")
@@ -497,7 +497,7 @@ def rename_slot():
             return
         isforbidden = False
         for char in new_name:
-            if char in "~'{};:./\,:*?<>|-!@#$%^&()+":
+            if char in "~'{};:./\\,:*?<>|-!@#$%^&()+":
                 isforbidden = True
         if isforbidden is True:
             popup("Forbidden character used")
@@ -592,17 +592,17 @@ def rename_char(file, nw_nm, dest_slot):
         raise
 
 
-def changelog(run=False):
-    info = ""
-    with open("./data/changelog.txt", "r") as f:
-        dat = f.readlines()
-        for line in dat:
-            info = info + f"\n\u2022 {line}\n"
-    if run:
-        popup(info, title="Changelog")
-        return
-    if config.post_update:
-        popup(info, title="Changelog")
+# def changelog(run=False):
+#     info = ""
+#     with open("./data/changelog.txt", "r") as f:
+#         dat = f.readlines()
+#         for line in dat:
+#             info = info + f"\n\u2022 {line}\n"
+#     if run:
+#         popup(info, title="Changelog")
+#         return
+#     if config.post_update:
+#         popup(info, title="Changelog")
 
 
 
@@ -617,14 +617,14 @@ def changelog(run=False):
 def char_manager_menu():
     """Entire character manager window for copying characters between save files"""
 
-    def readme():
-        info = ""
-        with open("./data/copy-readme.txt", "r") as f:
-            dat = f.readlines()
-            for line in dat:
-                info = info + line
-        popup(info)
-        # run_command("notepad ./data/copy-readme.txt")
+    # def readme():
+    #     info = ""
+    #     with open("./data/copy-readme.txt", "r") as f:
+    #         dat = f.readlines()
+    #         for line in dat:
+    #             info = info + line
+    #     popup(info)
+    #     # run_command("notepad ./data/copy-readme.txt")
 
     def open_video():
         webbrowser.open_new_tab(video_url)
@@ -795,7 +795,7 @@ def char_manager_menu():
     )  # menu is a parameter that lets you set a menubar for any given window
 
     helpmen = Menu(menubar, tearoff=0)
-    helpmen.add_command(label="Readme", command=readme)
+    #helpmen.add_command(label="Readme", command=readme)
     helpmen.add_command(label="Watch Video", command=open_video)
     menubar.add_cascade(label="Help", menu=helpmen)
 
@@ -1374,7 +1374,7 @@ def inventory_editor_menu():
             id = [ int(ids[0]), int(ids[1]) ]
             try:
                 config.add_to("custom_ids", {name:id})
-            except exception as e:
+            except Exception as e:
                 popup(f"Error:\n\n{repr(e)}")
                 return
 
@@ -1717,7 +1717,7 @@ def inventory_editor_menu():
 
             name = fetch_listbox_entry(lb1)[0]  # Save file name. EX: main
             if len(name) < 1:
-                popup(txt="Slot not selected", parent_window=win)
+                popup(text="Slot not selected", parent_window=win)
                 return
 
             dest_file = f"{savedir}{name}/{ext()}"
@@ -1762,7 +1762,7 @@ def inventory_editor_menu():
 
             name = fetch_listbox_entry(lb1)[1].strip()  # Save file name. EX: main
             if len(name) < 1:
-                popup(txt="Slot not selected", parent_window=win)
+                popup(text="Slot not selected", parent_window=win)
                 return
 
             dest_file = f"{savedir}{name}/{ext()}"
@@ -2288,7 +2288,7 @@ def import_save_menu(directory=False):
             return
         isforbidden = False
         for char in name:
-            if char in "~'{};:./\,:*?<>|-!@#$%^&()+":
+            if char in "~'{};:./\\,:*?<>|-!@#$%^&()+":
                 isforbidden = True
         if isforbidden is True:
             popup("Forbidden character used")
@@ -2398,7 +2398,7 @@ def godmode_menu():
 
         name = fetch_listbox_entry(lb1)[0]  # Save file name. EX: main
         if len(name) < 1:
-            popup(txt="Slot not selected", parent_window=popupwin)
+            popup(text="Slot not selected", parent_window=popupwin)
             return
 
         dest_file = f"{savedir}{name}/{ext()}"
@@ -2620,7 +2620,7 @@ def set_runes_menu():
 
         name = fetch_listbox_entry(lb1)[0]  # Save file name. EX: main
         if len(name) < 1:
-            popup(txt="Slot not selected", parent_window=popupwin)
+            popup(text="Slot not selected", parent_window=popupwin)
             return
 
         dest_file = f"{savedir}{name}/{ext()}"
@@ -2806,28 +2806,28 @@ root.resizable(width=False, height=False)
 root.title("{} {}".format(app_title, version))
 
 root.geometry("830x561")
-try:
-    root.iconbitmap(icon_file)
-except Exception:
-    print("Unix doesn't support .ico - setting the background as app icon")
-    root.iconphoto(True, PhotoImage(background_img))
+# try:
+#     root.iconbitmap(icon_file)
+# except Exception:
+#     print("Unix doesn't support .ico - setting the background as app icon")
+#     root.iconphoto(True, PhotoImage(background_img))
 
 # FANCY STUFF
-bg_img = ImageTk.PhotoImage(image=Image.open(background_img))
-background = Label(root, image=bg_img)
+#bg_img = ImageTk.PhotoImage(image=Image.open(background_img))
+#background = Label(root, image=bg_img)
 
-background.place(x=bk_p[0], y=bk_p[1], relwidth=1, relheight=1)
+#background.place(x=bk_p[0], y=bk_p[1], relwidth=1, relheight=1)
 
 # Images used on button widgets
-done_img = ImageTk.PhotoImage(
-    image=Image.open("./data/assets/but_done.png").resize((50, 30))
-)
-load_save_img = ImageTk.PhotoImage(
-    image=Image.open("./data/assets/but_load_save.png").resize((85, 40))
-)
-delete_save_img = ImageTk.PhotoImage(
-    image=Image.open("./data/assets/but_delete_save.png").resize((85, 40))
-)
+#done_img = ImageTk.PhotoImage(
+#    image=Image.open("./data/assets/but_done.png").resize((50, 30))
+#)
+#load_save_img = ImageTk.PhotoImage(
+#    image=Image.open("./data/assets/but_load_save.png").resize((85, 40))
+#)
+#delete_save_img = ImageTk.PhotoImage(
+#    image=Image.open("./data/assets/but_delete_save.png").resize((85, 40))
+#)
 
 
 menubar = Menu(root)
@@ -2844,7 +2844,7 @@ filemenu.add_command(label="seamless Co-op Mode", command=seamless_coop_menu)
 filemenu.add_command(label="Force quit EldenRing", command=forcequit)
 filemenu.add_command(label="Open Default Game Save Directory", command=open_game_save_dir)
 filemenu.add_separator()
-filemenu.add_command(label="Donate", command=lambda:webbrowser.open_new_tab("https://www.paypal.com/donate/?hosted_button_id=H2X24U55NUJJW"))
+#filemenu.add_command(label="Donate", command=lambda:webbrowser.open_new_tab("https://www.paypal.com/donate/?hosted_button_id=H2X24U55NUJJW"))
 filemenu.add_command(label="Exit", command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 
@@ -2855,7 +2855,7 @@ editmenu = Menu(menubar, tearoff=0)
 editmenu.add_command(label="Change Default Directory", command=change_default_dir)
 #editmenu.add_command(label="Reset To Default Directory", command=reset_default_dir)
 editmenu.add_command(label="Change Default SteamID", command=change_default_steamid_menu)
-editmenu.add_command(label="Check for updates", command=update_app)
+#editmenu.add_command(label="Check for updates", command=update_app)
 menubar.add_cascade(label="Edit", menu=editmenu)
 
 # TOOLS MENU
@@ -2878,7 +2878,7 @@ helpmenu = Menu(menubar, tearoff=0)
 #helpmenu.add_command(label="Readme", command=help_me)
 #helpmenu.add_command(label="About", command=about)
 helpmenu.add_command(label="Watch Video", command=lambda: webbrowser.open_new_tab(video_url))
-helpmenu.add_command(label="Changelog", command=lambda:changelog(run=True))
+#helpmenu.add_command(label="Changelog", command=lambda:changelog(run=True))
 helpmenu.add_command(label="Report Bug", command=lambda:popup("Report bugs on Nexus, GitHub or email me at scyntacks94@gmail.com"))
 menubar.add_cascade(label="Help", menu=helpmenu)
 
@@ -2890,7 +2890,7 @@ create_save_lab.grid(row=0, column=0, padx=(80, 10), pady=(0, 260))
 cr_save_ent = Entry(root, borderwidth=5)
 cr_save_ent.grid(row=0, column=1, pady=(0, 260))
 
-but_go = Button(root, text="Done", image=done_img, borderwidth=0, command=create_save)
+but_go = Button(root, text="Done", borderwidth=0, command=create_save)
 but_go.grid(row=0, column=2, padx=(10, 0), pady=(0, 260))
 
 lb = Listbox(root, borderwidth=3, width=25, height=16)
@@ -2932,14 +2932,12 @@ load_listbox(lb)  # populates listbox with saves on runtime
 but_load_save = Button(
     root,
     text="Load Save",
-    image=load_save_img,
     borderwidth=0,
     command=load_save_from_lb,
 )
 but_delete_save = Button(
     root,
     text="Delete Save",
-    image=delete_save_img,
     borderwidth=0,
     command=delete_save,
 )
@@ -2952,21 +2950,25 @@ but_delete_save.grid(row=3, column=3, padx=(215, 0), pady=(12, 0))
 
 
 
+try:
+    # INITIALIZE APP
+    config = Config()
+    itemdb = itemdata.Items()
+    if not os.path.exists("./data/save-files"):
+        os.makedirs("./data/save-files")
 
-# INITIALIZE APP
-config = Config()
-itemdb = itemdata.Items()
-if not os.path.exists("./data/save-files"):
-    os.makedirs("./data/save-files")
+    #update_app(True)
 
-update_app(True)
-
-if len(config.cfg["steamid"]) != 17:
-    popup("SteamID not set. Click edit > Change default SteamID to set.")
+    if len(config.cfg["steamid"]) != 17:
+        popup("SteamID not set. Click edit > Change default SteamID to set.")
 
 
 
-changelog()
-finish_update()
-config.set_update(False)
-root.mainloop()
+    #changelog()
+    #finish_update()
+    #config.set_update(False)
+    root.mainloop()
+except KeyboardInterrupt:
+    exit()
+except Exception as e:
+    print(e)

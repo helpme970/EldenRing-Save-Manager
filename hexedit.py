@@ -1,4 +1,4 @@
-import binascii, re, hashlib, random, base64, stat_progression, itemdata, os, allitems_dict
+import binascii, hashlib, random, base64, stat_progression # re, itemdata, os, allitems_dict
 from allitems_dict import itemdict
 
 def l_endian(val):
@@ -272,7 +272,7 @@ def copy_save(src_file, dest_file, src_char, dest_char):
 
 def get_id(file):
     with open(file, "rb") as f:
-        dat = f.read()
+        #dat = f.read()
         f.seek(26215348)  # start address of steamID
         steam_id = f.read(8)  # Get steamID
     return l_endian(steam_id)
@@ -283,7 +283,7 @@ def get_names(file):
         with open(file, "rb") as fh:
             dat1 = fh.read()
 
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         return False
 
     # Start address of each character slot name
@@ -432,7 +432,7 @@ def set_stats(file, char_num, stat_ls):
             lvl_ind = loc
 
             # Get the current level of the character
-            level = dest_char[lvl_ind : lvl_ind + 1]
+            #level = dest_char[lvl_ind : lvl_ind + 1]
 
             # Calculate the new level by subtracting 79 from the sum of the new stats
             new_lv = sum(stat_ls) - 79
@@ -681,7 +681,7 @@ def additem(file, slot, itemids, quantity):
     s_end = slices[slot - 1][1]
 
     with open(file, "rb") as f:
-        dat = f.read()
+        #dat = f.read()
 
         index = []
         cur = [int(i) for i in itemids]
@@ -822,7 +822,7 @@ def set_starting_class(file, slot, char_class):
 
 def find_inventory(file,slot,ids):
     with open(file, 'rb') as f:
-        dat = f.read()
+        #dat = f.read()
 
         c1 = get_slot_ls(file)[slot-1]
 
@@ -843,7 +843,7 @@ def find_inventory(file,slot,ids):
 def get_inventory(file, slot):
     items = dict([(f"{v[0]}:{v[1]}",k) for k,v in itemdict.items()])
     with open(file, "rb") as f:
-        dat = f.read()
+        #dat = f.read()
         ind = find_inventory(file, slot, [106,0]) # Search for Tarnished Wizened Finger ( you get it at beginning of game)
         ind -= 4 # go to the uid point
         c1 = get_slot_ls(file)[slot-1]

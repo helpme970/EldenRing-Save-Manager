@@ -3,7 +3,7 @@ import platform
 import sys
 import subprocess
 import shutil
-import re
+#import re
 
 # main variables, directories and settings
 config_path = "./data/config.json"
