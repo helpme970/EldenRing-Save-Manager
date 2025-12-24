@@ -43,6 +43,7 @@ pyinstaller --onefile --windowed ./SaveManager.py ./hexedit.py ./stat_progressio
 - removed update feature
 - removed features that do not work anymore
 - improved ui
+- reworked code
 </details>
 
 Video Tutorial: https://youtu.be/LQxmFuq3dfg?si=sKhjtqenEUBuTvBY
