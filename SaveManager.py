@@ -10,7 +10,6 @@ from collections import Counter
 import subprocess, os, zipfile, re, time, hexedit, webbrowser, itemdata, lzma, datetime, json #requests
 from os_layer import *
 from pathlib import Path as PATH
-#Collapse all functions to navigate. In Atom editor: "Edit > Folding > Fold All"
 
 
 # set always the working dir to the correct folder for unix env
@@ -19,19 +18,7 @@ if not is_windows:
 
 
 class Config:
-
     def __init__(self):
-        # if not os.path.exists(post_update_file):
-        #     with open(post_update_file, 'w') as ff:
-        #         ff.write("True")
-
-        # with open(post_update_file, 'r') as f:
-        #     x = f.read()
-        #     self.post_update = (True if x == 'True' else False)
-
-
-
-
         if os.path.exists(config_path):
             with open(config_path, 'r') as f:
                 dat = json.load(f)
@@ -45,7 +32,6 @@ class Config:
 
         if not os.path.exists(config_path):  # Build dictionary for first time
             dat = {}
-            #dat["post_update"] = True
             dat["gamedir"] = ""
             dat["steamid"] = ""
             dat["seamless-coop"] = False
@@ -58,10 +44,6 @@ class Config:
             with open(config_path, 'r') as f:
                 js = json.load(f)
                 self.cfg = js
-    # def set_update(self, val):
-    #     self.post_update = val
-    #     with open(post_update_file, 'w') as f:
-    #         f.write("True" if val else "False")
 
     def set(self,k,v):
         self.cfg[k] = v
@@ -219,42 +201,6 @@ def get_charnames(file):
     else:
         return out
 
-
-# def finish_update():
-#     if os.path.exists("./data/GameSaveDir.txt"):  # Legacy file for pre v1.5 versions
-#         os.remove("./data/GameSaveDir.txt")
-
-
-#     if config.post_update:  # Will be ran on first launch after running update.exe
-
-#         if not os.path.exists("./data/save-files-pre-V1.5-BACKUP"): # NONE OF THIS WILL BE RUN ON v1.5+
-#             try:
-#                 copy_folder(savedir, "./data/save-files-pre-V1.5-BACKUP")
-#             except Exception as e:
-#                 traceback.print_exc()
-#                 str_err = "".join(traceback.format_exc())
-#                 popup(str_err)
-
-#             for dir in os.listdir(savedir):  # Reconstruct save-file structure for pre v1.5 versions
-
-#                 try:
-#                     id = re.findall(r"\d{17}", str(os.listdir(f"{savedir}{dir}/")))
-#                     if len(id) < 1:
-#                         continue
-
-#                     shutil.move(f"{savedir}{dir}/{id[0]}/{ext()}", f"{savedir}{dir}/{ext()}")
-#                     for i in ["GraphicsConfig.xml", "notes.txt", "steam_autocloud.vdf"]:
-#                         if os.path.exists(f"{savedir}{dir}/{i}"):
-#                             os.remove(f"{savedir}{dir}/{i}")
-
-#                     delete_folder(f"{savedir}{dir}/{id[0]}")
-#                 except Exception as e:
-#                     traceback.print_exc()
-#                     str_err = "".join(traceback.format_exc())
-#                     popup(str_err)
-#                     continue
-
-
 def ext():
     if config.cfg["seamless-coop"]:
         return "ER0000.co2"
@@ -285,34 +231,6 @@ def open_folder():
 def forcequit():
     comm = lambda: force_close_process("eldenring.exe")
     popup(text="Are you sure?", buttons=True, command=comm)
-
-
-# def update_app(on_start=False):
-#     """Gets redirect URL of latest release, then pulls the version number from URL and makes a comparison"""
-
-#     try:
-#         version_url = (
-#             "https://github.com/Ariescyn/EldenRing-Save-Manager/releases/latest"
-#         )
-#         r = requests.get(version_url)  # Get redirect url
-#         ver = float(r.url.split("/")[-1].split("v")[1])
-#     except:
-#         popup("Can not check for updates. Check your internet connection.")
-#         return
-#     if ver > v_num:
-#         popup(
-#             text=f" Release v{str(ver)} Available\nClose the program and run the Updater.",
-#             buttons=True,
-#             functions=(root.quit, donothing),
-#             button_names=("Exit Now", "Cancel"),
-#         )
-
-#     if on_start is True:
-#         return
-#     else:
-#         popup("Current version up to date")
-#         return
-
 
 # def reset_default_dir():
 #     """DEPRECIATED! writes the original gamedir to text file"""
@@ -1887,7 +1805,7 @@ def inventory_editor_menu():
     helpmenu.add_command(label="Search", command=manual_search)
     helpmenu.add_command(label="Add item by ID", command=add_custom_id)
     helpmenu.add_command(label="Remove Custom Item", command=remove_id)
-    helpmenu.add_command(label="View Master Spreadsheet", command=lambda:webbrowser.open_new_tab("https://github.com/Ariescyn/EldenRing-Save-Manager/blob/main/ALL_ITEM_IDS.md"))
+    helpmenu.add_command(label="View Master Spreadsheet", command=lambda:webbrowser.open_new_tab("https://github.com/helpme970/EldenRing-Save-Manager/blob/main/ALL_ITEM_IDS.md"))
     menubar.add_cascade(label="Actions", menu=helpmenu)
 
 
@@ -2778,7 +2696,7 @@ def create_notes(name, dir):
 
 
 def about():
-    popup(text="Author: Lance Fitz\nEmail: scyntacks94@gmail.com\nGithub: github.com/Ariescyn")
+    popup(text="Original Author: Lance Fitz\nGithub: github.com/Ariescyn\n\nModified by: helpme970\nGithub: github.com/helpme970")
 
 
 def open_notes():
@@ -2806,29 +2724,6 @@ root.resizable(width=False, height=False)
 root.title("{} {}".format(app_title, version))
 
 root.geometry("830x561")
-# try:
-#     root.iconbitmap(icon_file)
-# except Exception:
-#     print("Unix doesn't support .ico - setting the background as app icon")
-#     root.iconphoto(True, PhotoImage(background_img))
-
-# FANCY STUFF
-#bg_img = ImageTk.PhotoImage(image=Image.open(background_img))
-#background = Label(root, image=bg_img)
-
-#background.place(x=bk_p[0], y=bk_p[1], relwidth=1, relheight=1)
-
-# Images used on button widgets
-#done_img = ImageTk.PhotoImage(
-#    image=Image.open("./data/assets/but_done.png").resize((50, 30))
-#)
-#load_save_img = ImageTk.PhotoImage(
-#    image=Image.open("./data/assets/but_load_save.png").resize((85, 40))
-#)
-#delete_save_img = ImageTk.PhotoImage(
-#    image=Image.open("./data/assets/but_delete_save.png").resize((85, 40))
-#)
-
 
 menubar = Menu(root)
 root.config(
@@ -2844,7 +2739,6 @@ filemenu.add_command(label="seamless Co-op Mode", command=seamless_coop_menu)
 filemenu.add_command(label="Force quit EldenRing", command=forcequit)
 filemenu.add_command(label="Open Default Game Save Directory", command=open_game_save_dir)
 filemenu.add_separator()
-#filemenu.add_command(label="Donate", command=lambda:webbrowser.open_new_tab("https://www.paypal.com/donate/?hosted_button_id=H2X24U55NUJJW"))
 filemenu.add_command(label="Exit", command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 
@@ -2876,10 +2770,10 @@ menubar.add_cascade(label="Cheats", menu=cheatmenu)
 # HELP MENU
 helpmenu = Menu(menubar, tearoff=0)
 #helpmenu.add_command(label="Readme", command=help_me)
-#helpmenu.add_command(label="About", command=about)
+helpmenu.add_command(label="About", command=about)
 helpmenu.add_command(label="Watch Video", command=lambda: webbrowser.open_new_tab(video_url))
 #helpmenu.add_command(label="Changelog", command=lambda:changelog(run=True))
-helpmenu.add_command(label="Report Bug", command=lambda:popup("Report bugs on Nexus, GitHub or email me at scyntacks94@gmail.com"))
+helpmenu.add_command(label="Report Bug", command=lambda:popup("Report bugs on GitHub"))
 menubar.add_cascade(label="Help", menu=helpmenu)
 
 
@@ -2901,7 +2795,6 @@ lb.grid(row=0, column=3, padx=(110, 0), pady=(30, 0))
 
 # -----------------------------------------------------------
 # right click popup menu in listbox
-
 
 def do_popup(event):
     try:
@@ -2945,11 +2838,6 @@ but_delete_save = Button(
 but_load_save.grid(row=3, column=3, pady=(12, 0))
 but_delete_save.grid(row=3, column=3, padx=(215, 0), pady=(12, 0))
 
-
-
-
-
-
 try:
     # INITIALIZE APP
     config = Config()
@@ -2961,8 +2849,6 @@ try:
 
     if len(config.cfg["steamid"]) != 17:
         popup("SteamID not set. Click edit > Change default SteamID to set.")
-
-
 
     #changelog()
     #finish_update()
