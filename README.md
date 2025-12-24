@@ -6,7 +6,7 @@ GUI app written entirely in Python
 
 ## Usage
 #### Windows
-[Download Latest Release](https://github.com/Ariescyn/EldenRing-Save-Manager/releases/latest)
+[Download Latest Release]()
 
 #### Linux / Proton / SteamDeck
 
@@ -48,8 +48,6 @@ pyinstaller --onefile --windowed --icon=./data/icon.ico ./SaveManager.py ./hexed
 - Update to the latest release with included updater
 - Force quit EldenRing when the game locks up and even task manager wont end the process
 
-If you like the mod or want to support future updates, please [Donate](https://www.paypal.com/donate/?hosted_button_id=H2X24U55NUJJW) via PayPal
-
 Video Tutorial: https://youtu.be/LQxmFuq3dfg?si=sKhjtqenEUBuTvBY
 
 ![save-editor](https://user-images.githubusercontent.com/68882322/163687699-334cf9d6-f956-4509-bebc-e549fe39fd3e.jpg)
@@ -57,12 +55,3 @@ Video Tutorial: https://youtu.be/LQxmFuq3dfg?si=sKhjtqenEUBuTvBY
 ![inventory editor](https://user-images.githubusercontent.com/68882322/164989037-1cc1256d-b833-478f-a7eb-84d4974d23f8.jpg)
 
 ![v1 40](https://user-images.githubusercontent.com/68882322/161843003-dfefa2fb-ca14-4401-970a-2875bb74c943.jpg)
-
-
-
-Icon used from https://www.deviantart.com/abdelrahman18/art/Elden-Ring-Icon-877626671
-You can use this icon to replace the horrible default Elden Ring game icon.
-
-
-
-
