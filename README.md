@@ -1,9 +1,6 @@
 # EldenRing-Save-Manager
 GUI app written entirely in Python
 
-
-
-
 ## Usage
 #### Windows
 [Download Latest Release]()
@@ -20,7 +17,6 @@ Pyinstaller
 pyinstaller --onefile --windowed ./SaveManager.py ./hexedit.py ./stat_progression.py ./itemdata.py ./os_layer.py ./allitems_dict.py
 ```
 
-
 ## Features:
 - Edit item quantities ( Can't add items you don't have )
 - Edit character stats
@@ -33,12 +29,21 @@ pyinstaller --onefile --windowed ./SaveManager.py ./hexedit.py ./stat_progressio
 - automatically patch downloaded save files with your own Steam ID
 - Fix corrupt save files by recalculating checksum values
 - Change quantity of Runes
-- God mode (sets HP, ST, FP to 60,000)
 - File recovery tool that backs up your save file before every action
 - Create save and load backups
 - Create save slots for various builds before respec etc.
 - Update to the latest release with included updater
 - Force quit EldenRing when the game locks up and even task manager wont end the process
+> Tested with Elden Ring version 1.16.1
+
+<details>
+<summary><h2>Changes made to the main project</h2></summary>
+
+- removed unnecessary dependencies
+- removed update feature
+- removed features that do not work anymore
+- improved ui
+</details>
 
 Video Tutorial: https://youtu.be/LQxmFuq3dfg?si=sKhjtqenEUBuTvBY
 
