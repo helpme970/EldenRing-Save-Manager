@@ -1,13 +1,13 @@
-import sys
+#import sys
 import traceback
 from tkinter import *
 from tkinter import font as FNT
 from tkinter import filedialog as fd
-from tkinter import ttk
+#from tkinter import ttk
 import tkinter as TKIN
 from collections import Counter
 #from PIL import Image #, ImageTk
-import subprocess, os, zipfile, re, time, hexedit, webbrowser, itemdata, lzma, datetime, json #requests
+import os, re, hexedit, webbrowser, itemdata, lzma, datetime, json #requests, subprocess, zipfile, time
 from os_layer import *
 from pathlib import Path as PATH
 
@@ -15,7 +15,6 @@ from pathlib import Path as PATH
 # set always the working dir to the correct folder for unix env
 if not is_windows:
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 
 class Config:
     def __init__(self):
@@ -144,13 +143,13 @@ def archive_file(file, name, metadata, names):
 
         meta_ls = [i for i in meta]
         try:
-            x = meta.encode("ascii") # Will fail with UnicodeEncodeError if special characters exist
+            #x = meta.encode("ascii") # Will fail with UnicodeEncodeError if special characters exist
             with open(f"./data/archive/{name}/info.txt", 'w') as f:
                 f.write(meta)
         except:
             for ind,i in enumerate(meta):
                 try:
-                    x = i.encode("ascii")
+                    #x = i.encode("ascii")
                     meta_ls[ind] = i
                 except:
                     meta_ls[ind] = '?'
@@ -161,7 +160,7 @@ def archive_file(file, name, metadata, names):
             with open(f"./data/archive/{name}/info.txt", 'w') as f:
                 f.write(fixed_meta)
 
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
         str_err = "".join(traceback.format_exc())
         popup(str_err)
@@ -169,7 +168,7 @@ def archive_file(file, name, metadata, names):
 
 
 def unarchive_file(file):
-    lzc = lzma.LZMACompressor()
+    #lzc = lzma.LZMACompressor()
     name = file.split("/")[-2]
     path = f"./data/recovered/{name}/"
 
@@ -217,7 +216,6 @@ def open_game_save_dir():
         open_folder_standard_exporer(config.cfg["gamedir"])
         return
 
-
 def open_folder():
     """Right-click open file location in listbox"""
     if len(lb.curselection()) < 1:
@@ -226,7 +224,6 @@ def open_folder():
     name = fetch_listbox_entry(lb)[0]
     cmd = lambda: open_folder_standard_exporer(f'{savedir}{name.replace(" ", "-")}')
     run_command(cmd)
-
 
 def forcequit():
     comm = lambda: force_close_process("eldenring.exe")
@@ -363,7 +360,7 @@ def run_command(subprocess_command, optional_success_out="OK"):
     it is integrated with popup function for in app error reporting."""
     try:
         subprocess_command()
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
         str_err = "".join(traceback.format_exc())
         popup(str_err)
@@ -374,13 +371,13 @@ def run_command(subprocess_command, optional_success_out="OK"):
 def delete_save():
     """Removes entire directory in save-files dir"""
     name = fetch_listbox_entry(lb)[0]
-    comm = lambda: delete_folder(f"{savedir}{name}")
+    #comm = lambda: delete_folder(f"{savedir}{name}")
 
     def yes():
         path = f"{savedir}{name}/{ext()}"
         chars = get_charnames(path)
         archive_file(path, name, "ACTION: Delete save file in Manager", chars)
-        out = run_command(comm)
+        #out = run_command(comm)
         lb.delete(0, END)
         load_listbox(lb)
 
@@ -642,8 +639,8 @@ def char_manager_menu():
         # If performing operations on the same file. Changes name to random, copies character to specified slot, then rewrites the name and re-populates the dropdown entries
         if src_file == dest_file:
             archive_file(dest_file, name2, "ACTION: Copy Character", nms)
-            cmd = lambda: copy_file(src_file, backup_path)
-            x = run_command(cmd)
+            #cmd = lambda: copy_file(src_file, backup_path)
+            #x = run_command(cmd)
             rand_name = hexedit.random_str()
             rename_char(backup_path, rand_name, src_ind)  # Change backup to random name
             hexedit.copy_save(backup_path, src_file, src_ind, dest_ind)
@@ -662,8 +659,8 @@ def char_manager_menu():
         #  copied file to destination save file, and rewrites names on destination file
         elif src_char_real in dest_names:
             archive_file(dest_file, name2, "ACTION: Copy character", nms)
-            cmd = lambda: copy_file(src_file, backup_path)
-            x = run_command(cmd)
+            #cmd = lambda: copy_file(src_file, backup_path)
+            #x = run_command(cmd)
             rand_name = hexedit.random_str()
             rename_char(backup_path, rand_name, src_ind)
 
@@ -822,7 +819,7 @@ def rename_characters_menu():
     rwin.resizable(width=True, height=True)
     rwin.geometry("300x200")
 
-    bolded = FNT.Font(weight="bold")  # will use the default font
+    #bolded = FNT.Font(weight="bold")  # will use the default font
     x = root.winfo_x()
     y = root.winfo_y()
     rwin.geometry("+%d+%d" % (x + 200, y + 200))
@@ -855,7 +852,7 @@ def stat_editor_menu():
             for ent in entries:
                 lvl += int(ent.get())
             lvl_var.set(f"Level: {lvl - 79}")
-        except Exception as e:
+        except Exception:
             return
 
     def set_stats():
@@ -874,7 +871,7 @@ def stat_editor_menu():
         min = stats[1]
         end = stats[2]
 
-        char = vars.get().split(". ")[1]
+        #char = vars.get().split(". ")[1]
         char_slot = int(vars.get().split(".")[0])
         name = fetch_listbox_entry(lb1)[0]
         file = f"{savedir}{name}/{ext()}"
@@ -948,7 +945,7 @@ def stat_editor_menu():
 
         try:
             stats = hexedit.get_stats(file, char_slot)[0]
-        except Exception as e:
+        except Exception:
             #pop_up("Can't get stats, go in-game and\nload into the character first or try leveling up once.")
             popup("Unable to aquire stats/level.\nYour character level may be incorrect.\nFix now?",functions=(lambda:fix_stats_menu(file, char_slot), lambda:popupwin.destroy()), buttons=True, button_names=("Yes", "No"), parent_window=popupwin)
             return
@@ -1277,7 +1274,7 @@ def inventory_editor_menu():
             delete_folder(f"{temp_dir}1")
             delete_folder(f"{temp_dir}2")
             delete_folder(f"{temp_dir}3")
-        except Exception as e:
+        except:
             pass
         popupwin.destroy()
         find_itemid()
@@ -1418,7 +1415,7 @@ def inventory_editor_menu():
 
             popupwin = Toplevel(window)
             popupwin.title("Add Item ID")
-            vcmd = (popupwin.register(validate), "%P")
+            #vcmd = (popupwin.register(validate), "%P")
             # popupwin.geometry("200x70")
 
             lab = Label(popupwin, text=f"Item ID: {id}\nEnter item name:")
@@ -1447,7 +1444,7 @@ def inventory_editor_menu():
 
             popupwin = Toplevel(window)
             popupwin.title("Add Item ID")
-            vcmd = (popupwin.register(validate), "%P")
+            #vcmd = (popupwin.register(validate), "%P")
             x = window.winfo_x()
             y = window.winfo_y()
             popupwin.geometry("+%d+%d" % (x + 200, y + 200))
@@ -1616,7 +1613,7 @@ def inventory_editor_menu():
                 if len(i) > 1:
                     dropdown3["menu"].add_command(label=i, command=TKIN._setit(i_vars, i))
             i_vars.set("Items")  # default value set
-            char = c_vars.get()
+            #char = c_vars.get()
 
 
         def populate_inventory():
@@ -2326,7 +2323,7 @@ def godmode_menu():
         try:
             hexedit.set_attributes(dest_file, char_ind, [99, 99, 99], cheat=True)
             popup("Success!", parent_window=popupwin)
-        except Exception as e:
+        except:
             #traceback.print_exc()
             #str_err = "".join(traceback.format_exc())
             #popup(str_err, parent_window=popupwin)
@@ -2704,8 +2701,8 @@ def open_notes():
     if len(name) < 1:
         popup("No listbox item selected.")
         return
-    cmd = lambda: open_textfile_in_editor(f"{savedir}{name}/notes.txt")
-    out = run_command(cmd)
+    #cmd = lambda: open_textfile_in_editor(f"{savedir}{name}/notes.txt")
+    #out = run_command(cmd)
 
 
 

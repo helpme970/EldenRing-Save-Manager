@@ -149,7 +149,7 @@ def change_name(file, nw_nm, dest_slot):
 
     name_locations = []
     ind1 = 0x1901D0E  # Start address of char names in header, 588 bytes apart
-    for i in range(10):
+    for _ in range(10):
         nm = dat1[ind1 : ind1 + 32]
         name_locations.append(nm)  # name in bytes
         ind1 += 588
@@ -497,7 +497,7 @@ def get_stats(file, char_slot):
     slot1 = slots[char_slot - 1]  # Get the slot data for the specified character slot
     indexes = []  # List to store the indexes of the stats
 
-    for ind, b in enumerate(slot1):
+    for ind, _ in enumerate(slot1):
         if ind > 120000:
             return None
 
@@ -520,12 +520,11 @@ def get_stats(file, char_slot):
                 start_ind = ind
                 lvl_ind = ind + 44
                 break
-
         except:
             continue
 
     idx = ind
-    for i in range(8):
+    for _ in range(8):
         indexes.append(idx)
         idx += 4
 
@@ -535,7 +534,7 @@ def get_stats(file, char_slot):
     fp_inds = []  # List to store the indexes of the fp values
     y = start_ind - 32
 
-    for i in range(3):
+    for _ in range(3):
         fp.append(l_endian(slot1[y : y + 2]))
         fp_inds.append(y)
         y += 4
@@ -544,7 +543,7 @@ def get_stats(file, char_slot):
     hp_inds = []  # List to store the indexes of the hp values
     x = start_ind - 44
 
-    for i in range(3):
+    for _ in range(3):
         hp.append(l_endian(slot1[x : x + 2]))
         hp_inds.append(x)
         x += 4
@@ -553,7 +552,7 @@ def get_stats(file, char_slot):
     stam_inds = []  # List to store the indexes of the stamina values
     z = start_ind - 16
 
-    for i in range(3):
+    for _ in range(3):
         stam.append(l_endian(slot1[z : z + 2]))
         stam_inds.append(z)
         z += 4
@@ -602,7 +601,7 @@ def get_levels(file):
 
     ind = 0x1901D0E + 34
     lvls = []
-    for i in range(10):
+    for _ in range(10):
         l = dat[ind : ind + 2]
 
         lvls.append(l_endian(l))
@@ -680,58 +679,52 @@ def additem(file, slot, itemids, quantity):
     s_start = slices[slot - 1][0]
     s_end = slices[slot - 1][1]
 
-    with open(file, "rb") as f:
+    #with open(file, "rb") as f:
         #dat = f.read()
 
-        index = []
-        cur = [int(i) for i in itemids]
+    index = []
+    cur = [int(i) for i in itemids]
 
-        if cur is None:
-            return None
+    if cur is None:
+        return None
 
-        for ind, i in enumerate(cs):
-            if ind < 30000:
-                continue
-            if ind > 195000:
-                continue
-            if (
-                l_endian(cs[ind : ind + 1]) == cur[0]
-                and l_endian(cs[ind + 1 : ind + 2]) == cur[1]
-                and l_endian(cs[ind + 2 : ind + 3]) == 0
-                and l_endian(cs[ind + 3 : ind + 4]) == 176
-            ):
-                index.append(ind + 4)
-            elif (
-                l_endian(cs[ind : ind + 1]) == cur[0]
-                and l_endian(cs[ind + 1 : ind + 2]) == cur[1]
-                and l_endian(cs[ind + 2 : ind + 3]) == 128
-                and l_endian(cs[ind + 3 : ind + 4]) == 128
-            ):
-                index.append(ind + 4)
+    for ind, i in enumerate(cs):
+        if ind < 30000:
+            continue
+        if ind > 195000:
+            continue
+        if (
+            l_endian(cs[ind : ind + 1]) == cur[0]
+            and l_endian(cs[ind + 1 : ind + 2]) == cur[1]
+            and l_endian(cs[ind + 2 : ind + 3]) == 0
+            and l_endian(cs[ind + 3 : ind + 4]) == 176
+        ):
+            index.append(ind + 4)
+        elif (
+            l_endian(cs[ind : ind + 1]) == cur[0]
+            and l_endian(cs[ind + 1 : ind + 2]) == cur[1]
+            and l_endian(cs[ind + 2 : ind + 3]) == 128
+            and l_endian(cs[ind + 3 : ind + 4]) == 128
+        ):
+            index.append(ind + 4)
 
-        if len(index) < 1:
-            return None
-        else:
-            pos = index[0]
+    if len(index) < 1:
+        return None
+    else:
+        pos = index[0]
 
-        with open(file, "wb") as fh:
-            ch = (
-                s_start
-                + cs[:pos]
-                + quantity.to_bytes(2, "little")
-                + cs[pos + 2 :]
-                + s_end
+    open(file, "wb").write(
+            s_start
+            + cs[:pos]
+            + quantity.to_bytes(2, "little")
+            + cs[pos + 2 :]
+            + s_end
             )
 
-            fh.write(ch)
-
-        recalc_checksum(file)
-        return True
-
-
+    recalc_checksum(file)
+    return True
 
 def search_itemid(f1,f2,f3,q1,q2,q3):
-
     with open(f1, 'rb') as f, open(f2, 'rb') as ff, open(f3, 'rb') as fff:
         dat = f.read()
         dat2 = ff.read()
@@ -747,8 +740,6 @@ def search_itemid(f1,f2,f3,q1,q2,q3):
             if ( l_endian(c1[ind:ind+1]) == int(q1) and l_endian(c2[ind:ind+1]) == int(q2) and l_endian(c3[ind:ind+1]) == int(q3)):
                 if ( l_endian(c1[ind - 2 : ind - 1]) == 0 and l_endian(c1[ind -1 : ind]) == 176 ) or ( l_endian(c1[ind - 2 : ind - 1]) == 128 and l_endian(c1[ind-1 : ind]) == 128):
                     index.append(ind)
-
-
 
         if len(index) == 1:
             idx = index[0]
@@ -821,55 +812,52 @@ def set_starting_class(file, slot, char_class):
 
 
 def find_inventory(file,slot,ids):
-    with open(file, 'rb') as f:
+    #with open(file, 'rb') as f:
         #dat = f.read()
 
-        c1 = get_slot_ls(file)[slot-1]
+    c1 = get_slot_ls(file)[slot-1]
 
-
-        for ind, i in enumerate(c1):
-            if ind < 30000:
-                continue
-            # Full Matches
-            if l_endian(c1[ind:ind+1]) > 0 and l_endian(c1[ind:ind+1]) < 1000: # quantity
-                if ( l_endian(c1[ind - 2 : ind - 1]) == 0 and l_endian(c1[ind -1 : ind]) == 176 ) or ( l_endian(c1[ind - 2 : ind - 1]) == 128 and l_endian(c1[ind-1 : ind]) == 128):
-                    if l_endian(c1[ind-3:ind-2]) == ids[1] and l_endian(c1[ind-4:ind-3]) == ids[0]:
-                        index = ind
-                        break
-
+    for ind, _ in enumerate(c1):
+        if ind < 30000:
+            continue
+        # Full Matches
+        if l_endian(c1[ind:ind+1]) > 0 and l_endian(c1[ind:ind+1]) < 1000: # quantity
+            if ( l_endian(c1[ind - 2 : ind - 1]) == 0 and l_endian(c1[ind -1 : ind]) == 176 ) or ( l_endian(c1[ind - 2 : ind - 1]) == 128 and l_endian(c1[ind-1 : ind]) == 128):
+                if l_endian(c1[ind-3:ind-2]) == ids[1] and l_endian(c1[ind-4:ind-3]) == ids[0]:
+                    index = ind
+                    break
         return index
-
 
 def get_inventory(file, slot):
     items = dict([(f"{v[0]}:{v[1]}",k) for k,v in itemdict.items()])
-    with open(file, "rb") as f:
+    #with open(file, "rb") as f:
         #dat = f.read()
-        ind = find_inventory(file, slot, [106,0]) # Search for Tarnished Wizened Finger ( you get it at beginning of game)
-        ind -= 4 # go to the uid point
-        c1 = get_slot_ls(file)[slot-1]
-        ls = []
-        ind -= (12 * 1024) # inventory item entry is 12 bytes long, so decrement index to beginning of inv
+    ind = find_inventory(file, slot, [106,0]) # Search for Tarnished Wizened Finger ( you get it at beginning of game)
+    ind -= 4 # go to the uid point
+    c1 = get_slot_ls(file)[slot-1]
+    ls = []
+    ind -= (12 * 1024) # inventory item entry is 12 bytes long, so decrement index to beginning of inv
 
-        for i in range(2048):
+    for i in range(2048):
 
-            ids = f"{l_endian(c1[ind:ind+1])}:{l_endian(c1[ind+1:ind+2])}"
-            try:
-                name = items[ids]
-            except KeyError:
-                name = "?"
+        ids = f"{l_endian(c1[ind:ind+1])}:{l_endian(c1[ind+1:ind+2])}"
+        try:
+            name = items[ids]
+        except KeyError:
+            name = "?"
 
-            ls.append({
-                          "name": name,
-                          "item_id": [l_endian(c1[ind:ind+1]), l_endian(c1[ind+1:ind+2])],
-                          "uid": [l_endian(c1[ind+2:ind+3]),  l_endian(c1[ind+3:ind+4])],
-                          "quantity": l_endian(c1[ind+4:ind+5]),
-                          "pad1": [l_endian(c1[ind+5:ind+6]),l_endian(c1[ind+6:ind+7]),l_endian(c1[ind+7:ind+8])],
-                          "iter": l_endian(c1[ind+8:ind+9]),
-                          "pad2":[ l_endian(c1[ind+9:ind+10]), l_endian(c1[ind+10:ind+11]),l_endian(c1[ind+11:ind+12])],
-                          "index": ind
-                          })
-            ind+= 12
-        sorted_ls = sorted(ls, key=lambda d: d['name'])
+        ls.append({
+                        "name": name,
+                        "item_id": [l_endian(c1[ind:ind+1]), l_endian(c1[ind+1:ind+2])],
+                        "uid": [l_endian(c1[ind+2:ind+3]),  l_endian(c1[ind+3:ind+4])],
+                        "quantity": l_endian(c1[ind+4:ind+5]),
+                        "pad1": [l_endian(c1[ind+5:ind+6]),l_endian(c1[ind+6:ind+7]),l_endian(c1[ind+7:ind+8])],
+                        "iter": l_endian(c1[ind+8:ind+9]),
+                        "pad2":[ l_endian(c1[ind+9:ind+10]), l_endian(c1[ind+10:ind+11]),l_endian(c1[ind+11:ind+12])],
+                        "index": ind
+                        })
+        ind+= 12
+    sorted_ls = sorted(ls, key=lambda d: d['name'])
     finished_ls = []
 
     for i in sorted_ls:
@@ -900,16 +888,14 @@ def overwrite_item(file,slot, item_dict_entry, newids):
 
 
 def fix_stats(file, char_slot, stat_list):
-
-
     slots = get_slot_ls(file)
     slot_slices = get_slot_slices(file)
 
-    start_ind = 0
+    #start_ind = 0
     slot1 = slots[char_slot - 1]
-    indexes = []
+    #indexes = []
     lvl_ind = 0
-    for ind, b in enumerate(slot1):
+    for ind, _ in enumerate(slot1):
         if ind > 90000:
             break
 
@@ -923,13 +909,9 @@ def fix_stats(file, char_slot, stat_list):
             l_endian(slot1[ind + 24 : ind + 25]),
             l_endian(slot1[ind + 28 : ind + 29]),
             ]
-
-
         if stats == stat_list:
             lvl_ind = ind + 44
             break
-
-
     if lvl_ind == 0:
         return False
 
@@ -956,7 +938,7 @@ def set_runes(file, char_slot, old_quantity, new_quantity):
     slot_slices = get_slot_slices(file)
     slot1 = slots[char_slot -1]
     index = 0
-    for ind, b in enumerate(slot1):
+    for ind, _ in enumerate(slot1):
         if ind > 80000:
             break
         x = l_endian(slot1[ind : ind + 4])

@@ -1,6 +1,5 @@
 import os, json
 
-
 item_dict = {
     "Upgrade Materials": {
         "Ancient Dragon Stone": [156, 39],
@@ -119,9 +118,8 @@ item_dict = {
     'Stimulating Boluses': [162, 3],
     'Thawfrost Boluses': [152, 3],
     },
-
     "Grease": {
-    'Blood Grease': [160, 5],
+    #'Blood Grease': [160, 5], # I honestly don't know which of this two is the right one
     'Blood Grease': [4, 6],
     'Drawstring Blood Grease': [4, 6],
     'Drawstring Fire Grease': [220, 5],
@@ -144,7 +142,6 @@ item_dict = {
     'Shield Grease': [154, 6],
     'Soporific Grease': [170, 5],
     },
-
     "Remembrance": {
     'R - Black Blade': [140, 11],
     'R- Blasphemous': [137, 11],
@@ -162,15 +159,13 @@ item_dict = {
     'R- Starsourge': [135, 11],
     'R- The Grafted': [134, 11],
     },
-
 }
-
 
 class Items:
     def __init__(self):
         self.db = item_dict
         if os.path.exists("./data/config.json"):
-            with open("./data/config.json", "r") as f:
+            with open("./data/config.json", "r", encoding="utf-8") as f:
                 js = json.load(f)
                 self.db["Custom Items"] = js["custom_ids"]  # ADDS custom IDS from config to itemdb merging with hard coded items
         self.categories = list(self.db.keys())  # Populate 1st dropdown menu
